@@ -9,13 +9,37 @@ class Header extends React.Component {
     super();
     this.state = {
       searchInput: false,
+      searchButton: true,
+      header: false,
+      title: '',
+      route: '',
     };
+  }
+
+  componentDidMount() {
+    const { history } = this.props;
+    const { location: { pathname } } = history;
+    this.setState({
+      route: pathname,
+    });
+    this.handleTitle();
+    this.handleButton();
+    this.handleHeader();
+  }
+
+  componentDidUpdate() {
+    const { history } = this.props;
+    const { route } = this.state;
+    const { location: { pathname } } = history;
+    if (pathname !== route) {
+      this.handleTitle();
+      this.setState({ route: pathname });
+    }
   }
 
   handleClickPerfil = () => {
     const { history } = this.props;
-    console.log(history);
-    history.push('/perfil');
+    history.push('/profile');
   };
 
   handleClickSearch = () => {
@@ -27,40 +51,60 @@ class Header extends React.Component {
     }
   };
 
+  handleTitle = () => {
+    const { history } = this.props;
+    const { location: { pathname } } = history;
+    if (pathname === '/') {
+      this.setState({ title: '' });
+    } else {
+      const pages = pathname.slice(1);
+      const title = pages.split('-');
+      const newTitle = title.map((e) => e[0].toUpperCase() + e.substring(1)).join(' ');
+      this.setState({ title: newTitle });
+    }
+  };
+
+  handleButton = () => {
+    const { history } = this.props;
+    const { location: { pathname } } = history;
+    if (pathname === '/profile'
+      || pathname === '/done-recipes' || pathname === '/favorite-recipes') {
+      this.setState({ searchButton: false });
+    }
+  };
+
+  handleHeader = () => {
+    const { history } = this.props;
+    const { location: { pathname } } = history;
+    if (pathname === '/meals' || pathname === '/drinks' || pathname === '/profile'
+      || pathname === '/favorite-recipes' || pathname === '/done-recipes') {
+      this.setState({ header: true });
+    }
+  };
+
   render() {
-    const { searchInput } = this.state;
+    const { searchInput, title, searchButton, header } = this.state;
     return (
       <>
-        <button
-          type="button"
-          data-testid="profile-top-btn"
-          onClick={ this.handleClickPerfil }
-        >
-          <object
-            type="image/svg+xml"
-            data={ profileIcon }
-          >
-            Profile
-          </object>
-        </button>
-        <h1 data-testid="page-title">{}</h1>
-        { searchInput ? (
-          <label htmlFor="search">
-            <input id="search" data-testid="search-input" type="text" />
-          </label>)
+        { header ? (
+          <header>
+            <button type="button" onClick={ this.handleClickPerfil }>
+              <img data-testid="profile-top-btn" src={ profileIcon } alt="Profile" />
+            </button>
+            <h1 data-testid="page-title">{ title }</h1>
+            { searchInput ? (
+              <label htmlFor="search">
+                <input id="search" data-testid="search-input" type="text" />
+              </label>)
+              : <p />}
+            { searchButton ? (
+              <button type="button" onClick={ this.handleClickSearch }>
+                <img data-testid="search-top-btn" src={ searchIcon } alt="Profile" />
+              </button>)
+              : <p />}
+          </header>)
           : <p />}
-        <button
-          type="button"
-          data-testid="search-top-btn"
-          onClick={ this.handleClickSearch }
-        >
-          <object
-            type="image/svg+xml"
-            data={ searchIcon }
-          >
-            Search
-          </object>
-        </button>
+        <p />
       </>
     );
   }
