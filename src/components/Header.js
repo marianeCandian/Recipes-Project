@@ -33,6 +33,7 @@ class Header extends React.Component {
     const { location: { pathname } } = history;
     if (pathname !== route) {
       this.handleTitle();
+      this.handleButton();
       this.setState({ route: pathname });
     }
   }
@@ -96,15 +97,15 @@ class Header extends React.Component {
               <label htmlFor="search">
                 <input id="search" data-testid="search-input" type="text" />
               </label>)
-              : <p />}
+              : <span />}
             { searchButton ? (
               <button type="button" onClick={ this.handleClickSearch }>
                 <img data-testid="search-top-btn" src={ searchIcon } alt="Profile" />
               </button>)
-              : <p />}
+              : <span />}
           </header>)
-          : <p />}
-        <p />
+          : <h1 data-testid="page-title"> </h1>}
+        <span />
       </>
     );
   }
