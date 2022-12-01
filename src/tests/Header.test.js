@@ -5,6 +5,7 @@ import userEvent from '@testing-library/user-event';
 import App from '../App';
 
 const testIdTitle = 'page-title';
+const testIdButton = 'profile-top-btn';
 
 describe('Testando as funcionalidades do Header', () => {
   it('Verifica a page done-recipes', () => {
@@ -13,7 +14,7 @@ describe('Testando as funcionalidades do Header', () => {
         <App />
       </MemoryRouter>,
     );
-    const profileIcon = screen.getByTestId('profile-top-btn');
+    const profileIcon = screen.getByTestId(testIdButton);
     expect(profileIcon).toBeInTheDocument();
 
     const title = screen.getByTestId(testIdTitle);
@@ -26,13 +27,13 @@ describe('Testando as funcionalidades do Header', () => {
         <App />
       </MemoryRouter>,
     );
-    const profileIcon = screen.getByTestId('profile-top-btn');
+    const profileIcon = screen.getByTestId(testIdButton);
     expect(profileIcon).toBeInTheDocument();
     const searchIcon = screen.getByTestId('search-top-btn');
     expect(searchIcon).toBeInTheDocument();
 
     const getButtons = screen.getAllByRole('button');
-    expect(getButtons).toHaveLength(2);
+    expect(getButtons).toHaveLength(4);
 
     const title = screen.getByTestId(testIdTitle);
     expect(title).toHaveTextContent('Meals');
@@ -46,12 +47,13 @@ describe('Testando as funcionalidades do Header', () => {
 
     userEvent.click(profileIcon);
 
-    expect(title).toHaveTextContent('Profile');
+    const title2 = screen.getByTestId(testIdTitle);
+    expect(title2).toHaveTextContent('Profile');
     const getButton = screen.getAllByRole('button');
-    expect(getButton).toHaveLength(1);
+    expect(getButton).toHaveLength(3);
   });
 
-  it('Verifica se page / possui um titulo em branco', () => {
+  it('Verifica a page loguin se não contem o header', () => {
     render(
       <MemoryRouter initialEntries={ ['/'] }>
         <App />
@@ -60,5 +62,18 @@ describe('Testando as funcionalidades do Header', () => {
     const title = screen.getByTestId(testIdTitle);
     expect(title).toBeInTheDocument();
     expect(title).toHaveTextContent('');
+  });
+
+  it('Verifica a page favorite renderiza o header corretamente', () => {
+    render(
+      <MemoryRouter initialEntries={ ['/favorite-recipes'] }>
+        <App />
+      </MemoryRouter>,
+    );
+    const title = screen.getByTestId(testIdTitle);
+    expect(title).toBeInTheDocument();
+    expect(title).toHaveTextContent('Favorite Recipes');
+    const profileIcon = screen.getByTestId(testIdButton);
+    expect(profileIcon).toBeInTheDocument();
   });
 });

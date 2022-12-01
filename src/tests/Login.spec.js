@@ -34,7 +34,7 @@ describe('Testando os inputs da tela de login', () => {
     const btn = screen.getByRole('button');
     expect(btn).toBeDisabled();
   });
-/*   it('Testando a validação do login se passado corretamente ', () => {
+  it('Testando a validação do login se passado corretamente ', () => {
     const { history } = renderWithRouterAndRedux(<App />);
     const emailField = screen.getByPlaceholderText('E-mail');
     userEvent.type(emailField, 'email@gmail.com');
@@ -50,6 +50,6 @@ describe('Testando os inputs da tela de login', () => {
     userEvent.click(btn);
 
     const { pathname } = history.location;
-    expect(pathname).toBe('/');
-  }); */
+    expect(pathname).toBe('/meals');
+  });
 });
