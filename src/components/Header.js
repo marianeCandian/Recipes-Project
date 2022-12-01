@@ -3,6 +3,7 @@ import { useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import profileIcon from '../images/profileIcon.svg';
 import searchIcon from '../images/searchIcon.svg';
+import SearchBar from './SearchBar';
 
 function Header({ pageName }) {
   const [searchInput, setSearchInput] = useState(false);
@@ -10,6 +11,7 @@ function Header({ pageName }) {
   const [header, setHeader] = useState(false);
   // const [title, setTitle] = useState('');
   // const [route, setRoute] = useState('');
+  const [searchbar, setSearchbar] = useState('');
   const history = useHistory();
 
   const handleClickPerfil = () => {
@@ -58,7 +60,7 @@ function Header({ pageName }) {
     handleButton();
     // handleTitle();
     handleHeader();
-  }, []);
+  });
 
   // useEffect(() => {
   //   const { location: { pathname } } = history;
@@ -81,13 +83,21 @@ function Header({ pageName }) {
           <h1 data-testid="page-title">{ pageName }</h1>
           { searchInput ? (
             <label htmlFor="search">
-              <input id="search" data-testid="search-input" type="text" />
+              <input
+                id="search"
+                data-testid="search-input"
+                type="text"
+                onChange={ (({ target }) => setSearchbar(target.value)) }
+              />
             </label>)
             : <span />}
           { searchButton ? (
-            <button type="button" onClick={ handleClickSearch }>
-              <img data-testid="search-top-btn" src={ searchIcon } alt="Profile" />
-            </button>)
+            <>
+              <SearchBar search={ searchbar } />
+              <button type="button" onClick={ handleClickSearch }>
+                <img data-testid="search-top-btn" src={ searchIcon } alt="Profile" />
+              </button>
+            </>)
             : <span />}
         </header>)
         : <h1 data-testid="page-title"> </h1>}
