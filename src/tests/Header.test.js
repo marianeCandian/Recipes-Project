@@ -3,9 +3,9 @@ import { render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import userEvent from '@testing-library/user-event';
 import App from '../App';
-import renderWithRouterAndRedux from './helpers/renderWithRouterAndRedux';
 
 const testIdTitle = 'page-title';
+const testIdButton = 'profile-top-btn';
 
 describe('Testando as funcionalidades do Header', () => {
   it('Verifica a page done-recipes', () => {
@@ -14,7 +14,7 @@ describe('Testando as funcionalidades do Header', () => {
         <App />
       </MemoryRouter>,
     );
-    const profileIcon = screen.getByTestId('profile-top-btn');
+    const profileIcon = screen.getByTestId(testIdButton);
     expect(profileIcon).toBeInTheDocument();
 
     const title = screen.getByTestId(testIdTitle);
@@ -27,7 +27,7 @@ describe('Testando as funcionalidades do Header', () => {
         <App />
       </MemoryRouter>,
     );
-    const profileIcon = screen.getByTestId('profile-top-btn');
+    const profileIcon = screen.getByTestId(testIdButton);
     expect(profileIcon).toBeInTheDocument();
     const searchIcon = screen.getByTestId('search-top-btn');
     expect(searchIcon).toBeInTheDocument();
@@ -53,51 +53,27 @@ describe('Testando as funcionalidades do Header', () => {
     expect(getButton).toHaveLength(3);
   });
 
-  it('Verifica se page / não possui um titulo', async () => {
-    const { history } = renderWithRouterAndRedux(<App />, '', '/profile');
-
-    const title = screen.getByTestId(testIdTitle);
-    expect(title).toHaveTextContent('Profile');
-
-    const getButton = screen.getAllByRole('button');
-    expect(getButton).toHaveLength(3);
-
-    history.push('/');
-
-    expect(title).not.toContain();
-    const title2 = await screen.findByTestId(testIdTitle);
-    expect(title2).toBeInTheDocument();
-    const button = await screen.findByRole('button');
-    expect(button).toBeInTheDocument();
-  });
-
-  it('Verifica a page drinks', () => {
+  it('Verifica a page loguin se não contem o header', () => {
     render(
-      <MemoryRouter initialEntries={ ['/drinks'] }>
+      <MemoryRouter initialEntries={ ['/'] }>
         <App />
       </MemoryRouter>,
     );
     const title = screen.getByTestId(testIdTitle);
-    expect(title).toHaveTextContent('Drinks');
+    expect(title).toBeInTheDocument();
+    expect(title).toHaveTextContent('');
   });
 
-  it('Verifica a page favorite-recipes', () => {
+  it('Verifica a page favorite renderiza o header corretamente', () => {
     render(
       <MemoryRouter initialEntries={ ['/favorite-recipes'] }>
         <App />
       </MemoryRouter>,
     );
     const title = screen.getByTestId(testIdTitle);
+    expect(title).toBeInTheDocument();
     expect(title).toHaveTextContent('Favorite Recipes');
-  });
-
-  it('Verifica a page profile', () => {
-    render(
-      <MemoryRouter initialEntries={ ['/profile'] }>
-        <App />
-      </MemoryRouter>,
-    );
-    const title = screen.getByTestId(testIdTitle);
-    expect(title).toHaveTextContent('Profile');
+    const profileIcon = screen.getByTestId(testIdButton);
+    expect(profileIcon).toBeInTheDocument();
   });
 });

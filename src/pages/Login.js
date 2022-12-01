@@ -1,5 +1,6 @@
 import { useHistory } from 'react-router-dom';
 import React, { useState } from 'react';
+import Header from '../components/Header';
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -20,6 +21,7 @@ export default function Login() {
 
   return (
     <form>
+      <Header pageName="Loguin" />
       <input
         type="text"
         name="email"
