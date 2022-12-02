@@ -29,6 +29,34 @@ export default function RecipeDetails() {
     return modifyURL.join('');
   };
 
+  const filterMeals = () => {
+    const magicNumber = 100;
+    const array = [];
+    for (let i = 1; i < magicNumber; i += 1) {
+      const ingredientes = `strIngredient${i}`;
+      const measure = `strMeasure${i}`;
+      if (meals[0][ingredientes] !== undefined && meals[0][ingredientes] !== null
+          && meals[0][ingredientes].length > 0) {
+        array.push(`${meals[0][ingredientes]}  -  ${meals[0][measure]}`);
+      }
+    }
+    return array;
+  };
+
+  const filterDrinks = () => {
+    const magicNumber = 100;
+    const array = [];
+    for (let i = 1; i < magicNumber; i += 1) {
+      const ingredientes = `strIngredient${i}`;
+      const measure = `strMeasure${i}`;
+      if (drinks[0][ingredientes] !== undefined && drinks[0][ingredientes] !== null
+          && drinks[0][ingredientes].length > 0) {
+        array.push(`${drinks[0][ingredientes]}  -  ${drinks[0][measure]}`);
+      }
+    }
+    return array;
+  };
+
   useEffect(() => {
     handleDispatch();
   }, []);
@@ -40,28 +68,25 @@ export default function RecipeDetails() {
           <div key={ i }>
             <img data-testid="recipe-photo" src={ e.strDrinkThumb } alt={ e.strDrink } />
             <h3 data-testid="recipe-title">{ e.strDrink }</h3>
-            <p data-testid="recipe-category">{ e.strCategory }</p>
-            <p data-testid={ `${i}-ingredient-name-and-measure` }>
-              { e.strIngredient1 }
-            </p>
+            <p data-testid="recipe-category">{ e.strAlcoholic }</p>
+            { filterDrinks().map((el, index) => (
+              <ul key={ index } data-testid={ `${index}-ingredient-name-and-measure` }>
+                <li>{ el }</li>
+              </ul>
+            ))}
             <p data-testid="instructions">{ e.strInstructions }</p>
           </div>
         ))}
       { meals
       && meals.map((e, i) => (
         <div key={ i }>
-          <img
-            width="300"
-            height="200"
-            data-testid="recipe-photo"
-            src={ e.strMealThumb }
-            alt={ e.strMeal }
-          />
+          <img data-testid="recipe-photo" src={ e.strMealThumb } alt={ e.strMeal } />
           <h3 data-testid="recipe-title">{ e.strMeal }</h3>
           <p data-testid="recipe-category">{ e.strCategory }</p>
-          <p data-testid={ `${i}-ingredient-name-and-measure` }>
-            { e.strIngredient1 }
-          </p>
+          { filterMeals().map((el, index) => (
+            <ul key={ index } data-testid={ `${index}-ingredient-name-and-measure` }>
+              <li>{ el }</li>
+            </ul>))}
           <p data-testid="instructions">{ e.strInstructions }</p>
           <iframe
             data-testid="video"
