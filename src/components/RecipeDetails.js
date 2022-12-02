@@ -6,8 +6,8 @@ import { fetchRecipesMeals, fetchRecipesDrinks } from '../redux/actions';
 export default function RecipeDetails() {
   const history = useHistory();
   const dispatch = useDispatch();
-  const meals = useSelector((state) => state.RecipeDetails.details.meals);
-  const drinks = useSelector((state) => state.RecipeDetails.details.drinks);
+  const meals = useSelector((state) => state.DetailsReducer.details.meals);
+  const drinks = useSelector((state) => state.DetailsReducer.details.drinks);
 
   const handleDispatch = () => {
     const { location: { pathname } } = history;
