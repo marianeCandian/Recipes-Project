@@ -11,6 +11,7 @@ export default function RecipeDetails() {
   const drinks = useSelector((state) => state.DetailsReducer.details.drinks);
   const [recomendationDrinks, setRecomendationDrinks] = useState();
   const [recomendationMeals, setRecomendationMeals] = useState();
+  const [verifyLocalStorage, setVerifyLocalStorage] = useState(true);
 
   const handleDispatch = () => {
     const { location: { pathname } } = history;
@@ -72,10 +73,33 @@ export default function RecipeDetails() {
     return data.drinks;
   };
 
+  const handleRecipeInProgress = () => {
+    const { location: { pathname } } = history;
+    const id = pathname.split('/');
+    if (id.includes('meals')) {
+      history.push(`/meals/${id[2]}/in-progress`);
+    }
+    if (id.includes('drinks')) {
+      history.push(`/drinks/${id[2]}/in-progress`);
+    }
+  };
+
+  const verifyKeyLocalStorage = () => {
+    const { location: { pathname } } = history;
+    const id = pathname.split('/');
+    const keyInProgressRecipes = localStorage.getItem('inProgressRecipes');
+    if (keyInProgressRecipes === null) {
+      setVerifyLocalStorage(true);
+    } else if (keyInProgressRecipes.includes(id[2])) {
+      setVerifyLocalStorage(false);
+    }
+  };
+
   useEffect(() => {
     handleDispatch();
     fetchRecommendationMeals();
     fetchRecommendationDrinks();
+    verifyKeyLocalStorage();
   }, []);
 
   return (
@@ -83,7 +107,12 @@ export default function RecipeDetails() {
       { drinks
         && drinks.map((e, i) => (
           <div key={ i }>
-            <img data-testid="recipe-photo" src={ e.strDrinkThumb } alt={ e.strDrink } />
+            <img
+              data-testid="recipe-photo"
+              src={ e.strDrinkThumb }
+              alt={ e.strDrink }
+              className="imgRecipes"
+            />
             <h3 data-testid="recipe-title">{ e.strDrink }</h3>
             <p data-testid="recipe-category">{ e.strAlcoholic }</p>
             <h4>Ingredients</h4>
@@ -119,7 +148,12 @@ export default function RecipeDetails() {
       { meals
       && meals.map((e, i) => (
         <div key={ i }>
-          <img data-testid="recipe-photo" src={ e.strMealThumb } alt={ e.strMeal } />
+          <img
+            data-testid="recipe-photo"
+            src={ e.strMealThumb }
+            alt={ e.strMeal }
+            className="imgRecipes"
+          />
           <h3 data-testid="recipe-title">{ e.strMeal }</h3>
           <p data-testid="recipe-category">{ e.strCategory }</p>
           <h4>Ingredients</h4>
@@ -155,8 +189,13 @@ export default function RecipeDetails() {
           </section>
         </div>
       ))}
-      <button type="button" data-testid="start-recipe-btn" className="buttonFooter">
-        Start Recipe
+      <button
+        type="button"
+        data-testid="start-recipe-btn"
+        onClick={ handleRecipeInProgress }
+        className="buttonFooter"
+      >
+        { verifyLocalStorage ? 'Start Recipe' : 'Continue Recipe' }
       </button>
     </>
   );
