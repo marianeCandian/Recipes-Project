@@ -20,6 +20,7 @@ function App() {
       <Route exact path="/favorite-recipes" component={ FavoriteRecipes } />
       <Route path="/meals/" component={ RecipeDetails } />
       <Route path="/drinks/" component={ RecipeDetails } />
+      <Route path="/meals/:idRecipe/in-progress" component={ RecipeInProgress } />
       <Route path="/drinks/:idRecipe/in-progress" component={ RecipeInProgress } />
     </Switch>
   );

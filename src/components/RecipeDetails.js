@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
+import copy from 'clipboard-copy';
 import { fetchRecipesMeals, fetchRecipesDrinks } from '../redux/actions';
+import whiteHeartIcon from '../images/whiteHeartIcon.svg';
+import shareIcon from '../images/shareIcon.svg';
 import '../RecipeDetails.css';
 
 export default function RecipeDetails() {
@@ -12,6 +15,8 @@ export default function RecipeDetails() {
   const [recomendationDrinks, setRecomendationDrinks] = useState();
   const [recomendationMeals, setRecomendationMeals] = useState();
   const [verifyLocalStorage, setVerifyLocalStorage] = useState(true);
+  const [copyUrl, setCopyUrl] = useState('');
+  const [copied, setCopied] = useState(true);
 
   const handleDispatch = () => {
     const { location: { pathname } } = history;
@@ -95,12 +100,27 @@ export default function RecipeDetails() {
     }
   };
 
+  const buttonShareIcon = () => {
+    const { location: { pathname } } = history;
+    setCopyUrl(pathname);
+    if (copyUrl === pathname) {
+      setCopied(false);
+    } else {
+      setCopied(true);
+    }
+    copy(`http://localhost:3000${pathname}`);
+  };
+
   useEffect(() => {
     handleDispatch();
     fetchRecommendationMeals();
     fetchRecommendationDrinks();
     verifyKeyLocalStorage();
   }, []);
+
+  useEffect(() => {
+    buttonShareIcon();
+  }, [copied]);
 
   return (
     <>
@@ -113,6 +133,13 @@ export default function RecipeDetails() {
               alt={ e.strDrink }
               className="imgRecipes"
             />
+            <button type="button" onClick={ buttonShareIcon }>
+              <img data-testid="share-btn" src={ shareIcon } alt="Share" />
+            </button>
+            { copied ? <span /> : <p>Link copied!</p>}
+            <button type="button">
+              <img data-testid="favorite-btn" src={ whiteHeartIcon } alt="Favorite" />
+            </button>
             <h3 data-testid="recipe-title">{ e.strDrink }</h3>
             <p data-testid="recipe-category">{ e.strAlcoholic }</p>
             <h4>Ingredients</h4>
@@ -154,6 +181,13 @@ export default function RecipeDetails() {
             alt={ e.strMeal }
             className="imgRecipes"
           />
+          <button type="button" onClick={ buttonShareIcon }>
+            <img data-testid="share-btn" src={ shareIcon } alt="Share" />
+          </button>
+          { copied ? <span /> : <p>Link copied!</p>}
+          <button type="button">
+            <img data-testid="favorite-btn" src={ whiteHeartIcon } alt="Favorite" />
+          </button>
           <h3 data-testid="recipe-title">{ e.strMeal }</h3>
           <p data-testid="recipe-category">{ e.strCategory }</p>
           <h4>Ingredients</h4>
