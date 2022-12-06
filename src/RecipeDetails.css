@@ -7,29 +7,29 @@
 
 .cards {
   flex: none;
-  scroll-snap-align: start;
   margin: 0 2%;
+  scroll-snap-align: start;
   width: 50%;
-} 
-
-.cards > img {
-  height: 88%;
-  width: 100%;
-}
-
-.recommended{
-  display: flex;
-  overflow-x: scroll;
-  height: 30vh;
-  width: 97%;
 }
 
 img {
   height: 200px;
 }
 
+.cards > img {
+  height: 88%;
+  width: 100%;
+}
+
 .list {
   display: flex;
   overflow-x: scroll;
   scroll-snap-type: x mandatory;
+}
+
+.recommended {
+  display: flex;
+  height: 30vh;
+  overflow-x: scroll;
+  width: 97%;
 }
