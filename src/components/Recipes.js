@@ -56,9 +56,37 @@ export default function Recipes() {
     }
   };
 
+  const fetchBySelectedCategory = async ({ target: { value } }) => {
+    console.log(value);
+    const {
+      location: { pathname },
+    } = history;
+    try {
+      if (pathname === '/meals') {
+        const targetUrl = `https://www.themealdb.com/api/json/v1/1/filter.php?c=${value}`;
+        const response = await fetch(targetUrl);
+        const data = await response.json();
+        const maxIndex = 12;
+        const result = data.meals.slice(0, maxIndex);
+        setMealsRecipes(result);
+      } else if (pathname === '/drinks') {
+        console.log(value);
+/*         const targetDrinkUrl = `https://www.thecocktaildb.com/api/json/v1/1/filter.php?c=${value}`;
+        const response = await fetch(targetDrinkUrl);
+        const data = await response.json();
+        const maxIndex = 12;
+        const result = data.drinks.slice(0, maxIndex);
+        setDrinksRecipes(result); */
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
     fetchCategories();
     fetchRecipes();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (
     <>
@@ -69,6 +97,7 @@ export default function Recipes() {
             type="button"
             data-testid={ `${category.strCategory}-category-filter` }
             value={ category.strCategory }
+            onClick={ fetchBySelectedCategory }
           >
             {category.strCategory}
           </button>
@@ -76,6 +105,13 @@ export default function Recipes() {
       ) : (
         <p />
       )}
+      <button
+        type="button"
+        data-testid="All-category-filter"
+        onClick={ fetchRecipes }
+      >
+        All
+      </button>
       {drinksCategories ? (
         drinksCategories.map((drinkCategory, index) => (
           <button
@@ -83,10 +119,9 @@ export default function Recipes() {
             type="button"
             data-testid={ `${drinkCategory.strCategory}-category-filter` }
             value={ drinkCategory.strCategory }
+            onClick={ fetchBySelectedCategory }
           >
-            <span>
-              {drinkCategory.strCategory}
-            </span>
+            <span>{drinkCategory.strCategory}</span>
           </button>
         ))
       ) : (
