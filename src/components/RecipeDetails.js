@@ -15,7 +15,6 @@ export default function RecipeDetails() {
   const [recomendationDrinks, setRecomendationDrinks] = useState();
   const [recomendationMeals, setRecomendationMeals] = useState();
   const [verifyLocalStorage, setVerifyLocalStorage] = useState(true);
-  const [copyUrl, setCopyUrl] = useState('');
   const [copied, setCopied] = useState(true);
 
   const handleDispatch = () => {
@@ -100,17 +99,6 @@ export default function RecipeDetails() {
     }
   };
 
-  const buttonShareIcon = () => {
-    const { location: { pathname } } = history;
-    setCopyUrl(pathname);
-    if (copyUrl === pathname) {
-      setCopied(false);
-    } else {
-      setCopied(true);
-    }
-    copy(`http://localhost:3000${pathname}`);
-  };
-
   useEffect(() => {
     handleDispatch();
     fetchRecommendationMeals();
@@ -118,9 +106,13 @@ export default function RecipeDetails() {
     verifyKeyLocalStorage();
   }, []);
 
-  useEffect(() => {
-    buttonShareIcon();
-  }, [copied]);
+  const buttonShareIcon = () => {
+    const { location: { pathname } } = history;
+    if (copied) {
+      setCopied(false);
+    }
+    copy(`http://localhost:3000${pathname}`);
+  };
 
   return (
     <>
