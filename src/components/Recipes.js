@@ -3,8 +3,33 @@ import { useHistory } from 'react-router-dom';
 
 export default function Recipes() {
   const [mealsRecipes, setMealsRecipes] = useState('');
+  const [mealsCategories, setMealsCategories] = useState();
   const [drinksRecipes, setDrinksRecipes] = useState('');
+  const [drinksCategories, setDrinksCategories] = useState();
   const history = useHistory();
+
+  const fetchCategories = async () => {
+    const { location: { pathname } } = history;
+    try {
+      if (pathname === '/meals') {
+        const mealCategoryUrl = 'https://www.themealdb.com/api/json/v1/1/list.php?c=list';
+        const response = await fetch(mealCategoryUrl);
+        const data = await response.json();
+        const maxIndex = 5;
+        const result = data.meals.slice(0, maxIndex);
+        setMealsCategories(result);
+      } else if (pathname === '/drinks') {
+        const drinkCategoryUrl = 'https://www.thecocktaildb.com/api/json/v1/1/list.php?c=list';
+        const response = await fetch(drinkCategoryUrl);
+        const data = await response.json();
+        const maxIndex = 5;
+        const result = data.drinks.slice(0, maxIndex);
+        setDrinksCategories(result);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const fetchRecipes = async () => {
     const {
@@ -32,11 +57,42 @@ export default function Recipes() {
   };
 
   useEffect(() => {
+    fetchCategories();
     fetchRecipes();
   }, []);
-  console.log(drinksRecipes);
   return (
     <>
+      {mealsCategories ? (
+        mealsCategories.map((category, index) => (
+          <button
+            key={ index }
+            type="button"
+            data-testid={ `${category.strCategory}-category-filter` }
+            value={ category.strCategory }
+          >
+            {category.strCategory}
+          </button>
+        ))
+      ) : (
+        <p />
+      )}
+      {drinksCategories ? (
+        drinksCategories.map((drinkCategory, index) => (
+          <button
+            key={ index }
+            type="button"
+            data-testid={ `${drinkCategory.strCategory}-category-filter` }
+            value={ drinkCategory.strCategory }
+          >
+            <span>
+              {drinkCategory.strCategory}
+            </span>
+          </button>
+        ))
+      ) : (
+        <p />
+      )}
+
       {mealsRecipes ? (
         mealsRecipes.map((recipe, index) => (
           <div key={ index } data-testid={ `${index}-recipe-card` }>
