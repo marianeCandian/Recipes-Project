@@ -4,6 +4,7 @@ import { useHistory } from 'react-router-dom';
 import copy from 'clipboard-copy';
 import { fetchRecipesMeals, fetchRecipesDrinks } from '../redux/actions';
 import whiteHeartIcon from '../images/whiteHeartIcon.svg';
+import blackHeartIcon from '../images/blackHeartIcon.svg';
 import shareIcon from '../images/shareIcon.svg';
 import '../RecipeDetails.css';
 
@@ -16,6 +17,7 @@ export default function RecipeDetails() {
   const [recomendationMeals, setRecomendationMeals] = useState();
   const [verifyLocalStorage, setVerifyLocalStorage] = useState(true);
   const [copied, setCopied] = useState(true);
+  const [favoriteBtn, setFavoriteBtn] = useState(true);
 
   const handleDispatch = () => {
     const { location: { pathname } } = history;
@@ -99,10 +101,42 @@ export default function RecipeDetails() {
     }
   };
 
+  const buttonFavorite = () => {
+    const { location: { pathname } } = history;
+    if (pathname.includes('meals')) {
+      const saveLocalStorage = meals.map((e) => ({ id: e.idMeal,
+        type: 'meal',
+        nationality: e.strArea,
+        category: e.strCategory,
+        alcoholicOrNot: '',
+        name: e.strMeal,
+        image: e.strMealThumb }));
+      localStorage.setItem('favoriteRecipes', JSON.stringify(saveLocalStorage));
+    } else if (pathname.includes('drinks')) {
+      const saveLocalStorage = drinks.map((e) => ({ id: e.idDrink,
+        type: 'drink',
+        nationality: '',
+        category: e.strCategory,
+        alcoholicOrNot: e.strAlcoholic,
+        name: e.strDrink,
+        image: e.strDrinkThumb }));
+      localStorage.setItem('favoriteRecipes', JSON.stringify(saveLocalStorage));
+    }
+    if (favoriteBtn) {
+      setFavoriteBtn(false);
+      localStorage.setItem('favorito', JSON.stringify(true));
+    } else {
+      setFavoriteBtn(true);
+      localStorage.setItem('favorito', JSON.stringify(false));
+    }
+  };
+
   useEffect(() => {
-    handleDispatch();
-    fetchRecommendationMeals();
-    fetchRecommendationDrinks();
+    const boolean = localStorage.getItem('favorito');
+    if (boolean === 'true') { setFavoriteBtn(false); } else if (boolean === 'false') {
+      setFavoriteBtn(true);
+    }
+    handleDispatch(); fetchRecommendationMeals(); fetchRecommendationDrinks();
     verifyKeyLocalStorage();
   }, []);
 
@@ -116,56 +150,54 @@ export default function RecipeDetails() {
 
   return (
     <>
-      { drinks
-        && drinks.map((e, i) => (
-          <div key={ i }>
-            <img
-              data-testid="recipe-photo"
-              src={ e.strDrinkThumb }
-              alt={ e.strDrink }
-              className="imgRecipes"
-            />
-            <button type="button" onClick={ buttonShareIcon }>
-              <img data-testid="share-btn" src={ shareIcon } alt="Share" />
-            </button>
-            { copied ? <span /> : <p>Link copied!</p>}
-            <button type="button">
-              <img data-testid="favorite-btn" src={ whiteHeartIcon } alt="Favorite" />
-            </button>
-            <h3 data-testid="recipe-title">{ e.strDrink }</h3>
-            <p data-testid="recipe-category">{ e.strAlcoholic }</p>
-            <h4>Ingredients</h4>
-            <fieldset>
-              { filterDrinks().map((el, index) => (
-                <ul key={ index } data-testid={ `${index}-ingredient-name-and-measure` }>
-                  <li>{ el }</li>
-                </ul>
-              ))}
-            </fieldset>
-            <h4>Instructions</h4>
-            <fieldset data-testid="instructions">{ e.strInstructions }</fieldset>
-            <h4>Recommended</h4>
-            <section className="recommended">
-              <div className="list">
-                { recomendationMeals
-                  && recomendationMeals.map((meal, ind) => (
-                    <div
-                      key={ ind }
-                      data-testid={ `${ind}-recommendation-card` }
-                      className="cards"
-                    >
-                      <img src={ meal.strMealThumb } alt={ meal.strMeal } />
-                      <p data-testid={ `${ind}-recommendation-title` }>
-                        { meal.strMeal }
-                      </p>
-                    </div>
-                  ))}
-              </div>
-            </section>
-          </div>
-        ))}
-      { meals
-      && meals.map((e, i) => (
+      <button type="button" onClick={ buttonShareIcon }>
+        <img data-testid="share-btn" src={ shareIcon } alt="Share" />
+      </button>
+      { copied ? <span /> : <p>Link copied!</p>}
+      <button type="button" onClick={ buttonFavorite }>
+        <img
+          data-testid="favorite-btn"
+          src={ favoriteBtn ? whiteHeartIcon : blackHeartIcon }
+          alt="Favorite"
+        />
+      </button>
+      { drinks && drinks.map((e, i) => (
+        <div key={ i }>
+          <img
+            data-testid="recipe-photo"
+            src={ e.strDrinkThumb }
+            alt={ e.strDrink }
+            className="imgRecipes"
+          />
+          <h3 data-testid="recipe-title">{ e.strDrink }</h3>
+          <p data-testid="recipe-category">{ e.strAlcoholic }</p>
+          <h4>Ingredients</h4>
+          <fieldset>
+            { filterDrinks().map((el, index) => (
+              <ul key={ index } data-testid={ `${index}-ingredient-name-and-measure` }>
+                <li>{ el }</li>
+              </ul>))}
+          </fieldset>
+          <h4>Instructions</h4>
+          <fieldset data-testid="instructions">{ e.strInstructions }</fieldset>
+          <h4>Recommended</h4>
+          <section className="recommended">
+            <div className="list">
+              { recomendationMeals && recomendationMeals.map((meal, ind) => (
+                <div
+                  key={ ind }
+                  data-testid={ `${ind}-recommendation-card` }
+                  className="cards"
+                >
+                  <img src={ meal.strMealThumb } alt={ meal.strMeal } />
+                  <p data-testid={ `${ind}-recommendation-title` }>
+                    { meal.strMeal }
+                  </p>
+                </div>))}
+            </div>
+          </section>
+        </div>))}
+      { meals && meals.map((e, i) => (
         <div key={ i }>
           <img
             data-testid="recipe-photo"
@@ -173,22 +205,14 @@ export default function RecipeDetails() {
             alt={ e.strMeal }
             className="imgRecipes"
           />
-          <button type="button" onClick={ buttonShareIcon }>
-            <img data-testid="share-btn" src={ shareIcon } alt="Share" />
-          </button>
-          { copied ? <span /> : <p>Link copied!</p>}
-          <button type="button">
-            <img data-testid="favorite-btn" src={ whiteHeartIcon } alt="Favorite" />
-          </button>
           <h3 data-testid="recipe-title">{ e.strMeal }</h3>
           <p data-testid="recipe-category">{ e.strCategory }</p>
           <h4>Ingredients</h4>
           <fieldset>
-            { filterMeals().map((el, index) => (
+            { filterMeals().map((element, index) => (
               <ul key={ index } data-testid={ `${index}-ingredient-name-and-measure` }>
-                <li>{ el }</li>
-              </ul>
-            ))}
+                <li>{ element }</li>
+              </ul>))}
           </fieldset>
           <h4>Instructions</h4>
           <fieldset data-testid="instructions">{ e.strInstructions }</fieldset>
@@ -200,8 +224,7 @@ export default function RecipeDetails() {
           <h4>Recommended</h4>
           <section className="recommended">
             <div className="list">
-              { recomendationDrinks
-              && recomendationDrinks.map((drink, ind) => (
+              { recomendationDrinks && recomendationDrinks.map((drink, ind) => (
                 <div
                   key={ ind }
                   data-testid={ `${ind}-recommendation-card` }
@@ -209,12 +232,10 @@ export default function RecipeDetails() {
                 >
                   <img src={ drink.strDrinkThumb } alt={ drink.strDrink } />
                   <p data-testid={ `${ind}-recommendation-title` }>{ drink.strDrink }</p>
-                </div>
-              ))}
+                </div>))}
             </div>
           </section>
-        </div>
-      ))}
+        </div>))}
       <button
         type="button"
         data-testid="start-recipe-btn"
