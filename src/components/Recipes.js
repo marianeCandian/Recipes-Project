@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useHistory, Link } from 'react-router-dom';
 
 export default function Recipes() {
   const [mealsRecipes, setMealsRecipes] = useState('');
@@ -57,7 +57,6 @@ export default function Recipes() {
   };
 
   const fetchBySelectedCategory = async ({ target: { value } }) => {
-    console.log(value);
     const {
       location: { pathname },
     } = history;
@@ -75,7 +74,6 @@ export default function Recipes() {
         const data = await response.json();
         const maxIndex = 12;
         const result = data.drinks.slice(0, maxIndex);
-
         setDrinksRecipes(result);
       }
     } catch (error) {
@@ -129,28 +127,33 @@ export default function Recipes() {
       )}
 
       {mealsRecipes ? (
-        mealsRecipes.map((recipe, index, { idMeal }) => (
-          <div key={ idMeal } data-testid={ `${index}-recipe-card` }>
-            <img
-              src={ recipe.strMealThumb }
-              alt={ `${recipe.strMeal} thumb` }
-              data-testid={ `${index}-card-img` }
-            />
-            <p data-testid={ `${index}-card-name` }>{recipe.strMeal}</p>
+        mealsRecipes.map((recipe, index) => (
+          <div key={ index } data-testid={ `${index}-recipe-card` }>
+            <Link to={ `/meals/${recipe.idMeal}` }>
+
+              <img
+                src={ recipe.strMealThumb }
+                alt={ `${recipe.strMeal} thumb` }
+                data-testid={ `${index}-card-img` }
+              />
+              <p data-testid={ `${index}-card-name` }>{recipe.strMeal}</p>
+            </Link>
           </div>
         ))
       ) : (
         <p />
       )}
       {drinksRecipes ? (
-        drinksRecipes.map((recipe, index, { idDrink }) => (
-          <div key={ idDrink } data-testid={ `${index}-recipe-card` }>
-            <img
-              src={ recipe.strDrinkThumb }
-              alt={ `${recipe.strDrink} thumb` }
-              data-testid={ `${index}-card-img` }
-            />
-            <p data-testid={ `${index}-card-name` }>{recipe.strDrink}</p>
+        drinksRecipes.map((recipe, index) => (
+          <div key={ index } data-testid={ `${index}-recipe-card` }>
+            <Link to={ `/drinks/${recipe.idDrink}` }>
+              <img
+                src={ recipe.strDrinkThumb }
+                alt={ `${recipe.strDrink} thumb` }
+                data-testid={ `${index}-card-img` }
+              />
+              <p data-testid={ `${index}-card-name` }>{recipe.strDrink}</p>
+            </Link>
           </div>
         ))
       ) : (
