@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useHistory, Link } from 'react-router-dom';
 
 export default function Recipes() {
   const [mealsRecipes, setMealsRecipes] = useState('');
@@ -130,12 +130,15 @@ export default function Recipes() {
       {mealsRecipes ? (
         mealsRecipes.map((recipe, index) => (
           <div key={ index } data-testid={ `${index}-recipe-card` }>
-            <img
-              src={ recipe.strMealThumb }
-              alt={ `${recipe.strMeal} thumb` }
-              data-testid={ `${index}-card-img` }
-            />
-            <p data-testid={ `${index}-card-name` }>{recipe.strMeal}</p>
+            <Link to={ `/meals/${recipe.idMeal}` }>
+
+              <img
+                src={ recipe.strMealThumb }
+                alt={ `${recipe.strMeal} thumb` }
+                data-testid={ `${index}-card-img` }
+              />
+              <p data-testid={ `${index}-card-name` }>{recipe.strMeal}</p>
+            </Link>
           </div>
         ))
       ) : (
@@ -144,12 +147,14 @@ export default function Recipes() {
       {drinksRecipes ? (
         drinksRecipes.map((recipe, index) => (
           <div key={ index } data-testid={ `${index}-recipe-card` }>
-            <img
-              src={ recipe.strDrinkThumb }
-              alt={ `${recipe.strDrink} thumb` }
-              data-testid={ `${index}-card-img` }
-            />
-            <p data-testid={ `${index}-card-name` }>{recipe.strDrink}</p>
+            <Link to={ `/drinks/${recipe.idDrink}` }>
+              <img
+                src={ recipe.strDrinkThumb }
+                alt={ `${recipe.strDrink} thumb` }
+                data-testid={ `${index}-card-img` }
+              />
+              <p data-testid={ `${index}-card-name` }>{recipe.strDrink}</p>
+            </Link>
           </div>
         ))
       ) : (
