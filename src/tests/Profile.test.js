@@ -25,13 +25,13 @@ describe('Testando as funcionalidades do Profile', () => {
 
     userEvent.click(btn);
 
-    const bntProfile = screen.getByTestId('profile-top-btn');
+    const bntProfile = screen.getByTestId(profileTop);
     userEvent.click(bntProfile);
 
     const testIdTitle = screen.getByTestId(pageTitle);
     expect(testIdTitle).toHaveTextContent('Profile');
 
-    const btnDoneRecepis = screen.getByTestId(profileTop);
+    const btnDoneRecepis = screen.getByTestId('profile-done-btn');
     expect(btnDoneRecepis).toBeInTheDocument();
 
     userEvent.click(btnDoneRecepis);
@@ -55,10 +55,16 @@ describe('Testando as funcionalidades do Profile', () => {
     expect(emailProfile).toBeInTheDocument();
     expect(emailProfile).toHaveTextContent(email);
 
+    const storage = JSON.parse(localStorage.getItem('user'));
+    expect(storage.email).toBe(email);
+
     const bntLogout = screen.getByTestId('profile-logout-btn');
     userEvent.click(bntLogout);
 
     const { pathname } = history.location;
     expect(pathname).toBe('/');
+
+    const storage2 = JSON.parse(localStorage.getItem('user'));
+    expect(storage2).toBe(null);
   });
 });
