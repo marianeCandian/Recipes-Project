@@ -57,7 +57,6 @@ export default function Recipes() {
   };
 
   const fetchBySelectedCategory = async ({ target: { value } }) => {
-    console.log(value);
     const {
       location: { pathname },
     } = history;
@@ -70,13 +69,13 @@ export default function Recipes() {
         const result = data.meals.slice(0, maxIndex);
         setMealsRecipes(result);
       } else if (pathname === '/drinks') {
-        console.log(value);
-/*         const targetDrinkUrl = `https://www.thecocktaildb.com/api/json/v1/1/filter.php?c=${value}`;
+        const targetDrinkUrl = `https://www.thecocktaildb.com/api/json/v1/1/filter.php?c=${value}`;
         const response = await fetch(targetDrinkUrl);
         const data = await response.json();
+        console.log(data);
         const maxIndex = 12;
         const result = data.drinks.slice(0, maxIndex);
-        setDrinksRecipes(result); */
+        setDrinksRecipes(result);
       }
     } catch (error) {
       console.log(error);
@@ -121,7 +120,7 @@ export default function Recipes() {
             value={ drinkCategory.strCategory }
             onClick={ fetchBySelectedCategory }
           >
-            <span>{drinkCategory.strCategory}</span>
+            {drinkCategory.strCategory}
           </button>
         ))
       ) : (
