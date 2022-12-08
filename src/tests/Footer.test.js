@@ -1,16 +1,12 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
+import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import App from '../App';
+import renderWithRouterAndRedux from './helpers/renderWithRouterAndRedux';
 
 describe('Testando as funcionalidades do Footer', () => {
   it('Verifica se a pagina profile renderiza drinks e meals', () => {
-    render(
-      <MemoryRouter initialEntries={ ['/profile'] }>
-        <App />
-      </MemoryRouter>,
-    );
+    renderWithRouterAndRedux(<App />, '', '/profile');
     const drinkIcon = screen.getByTestId('drinks-bottom-btn');
     expect(drinkIcon).toBeInTheDocument();
 

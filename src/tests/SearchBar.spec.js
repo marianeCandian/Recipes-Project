@@ -31,4 +31,7 @@ describe('Testing SearchBar Component', () => {
     console.log(target);
     expect(await store.getState().search).not.toBe({});
   });
+
+  it('', () => {
+  });
 });
