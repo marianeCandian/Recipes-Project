@@ -6,6 +6,7 @@ export default function Recipes() {
   const [mealsCategories, setMealsCategories] = useState();
   const [drinksRecipes, setDrinksRecipes] = useState('');
   const [drinksCategories, setDrinksCategories] = useState();
+  const [selectedCategory, setSelectedCategory] = useState('');
   const history = useHistory();
 
   const fetchCategories = async () => {
@@ -56,29 +57,38 @@ export default function Recipes() {
     }
   };
 
-  const fetchBySelectedCategory = async ({ target: { value } }) => {
+  const fetchBySelectedMealCategory = async ({ target: { value } }) => {
     const {
       location: { pathname },
     } = history;
-    try {
-      if (pathname === '/meals') {
-        const targetUrl = `https://www.themealdb.com/api/json/v1/1/filter.php?c=${value}`;
-        const response = await fetch(targetUrl);
-        const data = await response.json();
-        const maxIndex = 12;
-        const result = data.meals.slice(0, maxIndex);
-        setMealsRecipes(result);
-      } else if (pathname === '/drinks') {
-        const targetDrinkUrl = `https://www.thecocktaildb.com/api/json/v1/1/filter.php?c=${value}`;
-        const response = await fetch(targetDrinkUrl);
-        const data = await response.json();
-        console.log(data);
-        const maxIndex = 12;
-        const result = data.drinks.slice(0, maxIndex);
-        setDrinksRecipes(result);
-      }
-    } catch (error) {
-      console.log(error);
+    setSelectedCategory(value);
+    if (selectedCategory === value) {
+      fetchRecipes();
+    } else if (pathname === '/meals') {
+      const targetUrl = `https://www.themealdb.com/api/json/v1/1/filter.php?c=${value}`;
+      const response = await fetch(targetUrl);
+      const data = await response.json();
+      const maxIndex = 12;
+      const result = data.meals.slice(0, maxIndex);
+      setMealsRecipes(result);
+    }
+  };
+
+  const fetchBySelectedDrinkCategory = async ({ target: { value } }) => {
+    const {
+      location: { pathname },
+    } = history;
+    setSelectedCategory(value);
+    if (selectedCategory === value) {
+      fetchRecipes();
+    } else if (pathname === '/drinks') {
+      const targetDrinkUrl = `https://www.thecocktaildb.com/api/json/v1/1/filter.php?c=${value}`;
+      const response = await fetch(targetDrinkUrl);
+      const data = await response.json();
+      console.log(data);
+      const maxIndex = 12;
+      const result = data.drinks.slice(0, maxIndex);
+      setDrinksRecipes(result);
     }
   };
 
@@ -96,7 +106,7 @@ export default function Recipes() {
             type="button"
             data-testid={ `${category.strCategory}-category-filter` }
             value={ category.strCategory }
-            onClick={ fetchBySelectedCategory }
+            onClick={ fetchBySelectedMealCategory }
           >
             {category.strCategory}
           </button>
@@ -118,7 +128,7 @@ export default function Recipes() {
             type="button"
             data-testid={ `${drinkCategory.strCategory}-category-filter` }
             value={ drinkCategory.strCategory }
-            onClick={ fetchBySelectedCategory }
+            onClick={ fetchBySelectedDrinkCategory }
           >
             {drinkCategory.strCategory}
           </button>
@@ -131,7 +141,6 @@ export default function Recipes() {
         mealsRecipes.map((recipe, index) => (
           <div key={ index } data-testid={ `${index}-recipe-card` }>
             <Link to={ `/meals/${recipe.idMeal}` }>
-
               <img
                 src={ recipe.strMealThumb }
                 alt={ `${recipe.strMeal} thumb` }
