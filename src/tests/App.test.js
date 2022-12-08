@@ -1,10 +1,7 @@
-// import React from 'react';
-// import { render, screen } from '@testing-library/react';
-// import App from '../App';
+import React from 'react';
+import App from '../App';
+import renderWithRouterAndRedux from './helpers/renderWithRouterAndRedux';
 
-// test('Farewell, front-end', () => {
-//   // Este arquivo pode ser modificado ou deletado sem problemas
-//   render(<App />);
-//   const linkElement = screen.getByText(/TRYBE/i);
-//   expect(linkElement).toBeInTheDocument();
-// });
+test('Farewell, front-end', () => {
+  renderWithRouterAndRedux(<App />);
+});

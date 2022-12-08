@@ -1,0 +1,35 @@
+.buttonFooter {
+  bottom: 0;
+  height: 2.5rem;
+  position: fixed;
+  width: 100%;
+}
+
+.cards {
+  flex: none;
+  margin: 0 2%;
+  scroll-snap-align: start;
+  width: 50%;
+}
+
+.imgRecipes {
+  height: 200px;
+}
+
+.cards > img {
+  height: 88%;
+  width: 100%;
+}
+
+.list {
+  display: flex;
+  overflow-x: scroll;
+  scroll-snap-type: x mandatory;
+}
+
+.recommended {
+  display: flex;
+  height: 30vh;
+  overflow-x: scroll;
+  width: 97%;
+}
