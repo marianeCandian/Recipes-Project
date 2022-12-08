@@ -70,13 +70,13 @@ export default function Recipes() {
         const result = data.meals.slice(0, maxIndex);
         setMealsRecipes(result);
       } else if (pathname === '/drinks') {
-        console.log(value);
-/*         const targetDrinkUrl = `https://www.thecocktaildb.com/api/json/v1/1/filter.php?c=${value}`;
+        const targetDrinkUrl = `https://www.thecocktaildb.com/api/json/v1/1/filter.php?c=${value}`;
         const response = await fetch(targetDrinkUrl);
         const data = await response.json();
         const maxIndex = 12;
         const result = data.drinks.slice(0, maxIndex);
-        setDrinksRecipes(result); */
+
+        setDrinksRecipes(result);
       }
     } catch (error) {
       console.log(error);
@@ -121,7 +121,7 @@ export default function Recipes() {
             value={ drinkCategory.strCategory }
             onClick={ fetchBySelectedCategory }
           >
-            <span>{drinkCategory.strCategory}</span>
+            {drinkCategory.strCategory}
           </button>
         ))
       ) : (
@@ -129,8 +129,8 @@ export default function Recipes() {
       )}
 
       {mealsRecipes ? (
-        mealsRecipes.map((recipe, index) => (
-          <div key={ index } data-testid={ `${index}-recipe-card` }>
+        mealsRecipes.map((recipe, index, { idMeal }) => (
+          <div key={ idMeal } data-testid={ `${index}-recipe-card` }>
             <img
               src={ recipe.strMealThumb }
               alt={ `${recipe.strMeal} thumb` }
@@ -143,8 +143,8 @@ export default function Recipes() {
         <p />
       )}
       {drinksRecipes ? (
-        drinksRecipes.map((recipe, index) => (
-          <div key={ index } data-testid={ `${index}-recipe-card` }>
+        drinksRecipes.map((recipe, index, { idDrink }) => (
+          <div key={ idDrink } data-testid={ `${index}-recipe-card` }>
             <img
               src={ recipe.strDrinkThumb }
               alt={ `${recipe.strDrink} thumb` }
