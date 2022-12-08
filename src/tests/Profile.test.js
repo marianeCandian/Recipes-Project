@@ -4,13 +4,17 @@ import userEvent from '@testing-library/user-event';
 import App from '../App';
 import renderWithRouterAndRedux from './helpers/renderWithRouterAndRedux';
 
+const email = 'email@gmail.com';
+const profileTop = 'profile-top-btn';
+const pageTitle = 'page-title';
+
 describe('Testando as funcionalidades do Profile', () => {
   it('Verifica se a pagina profile renderiza corretamente', () => {
     const { history } = renderWithRouterAndRedux(<App />);
 
     const emailField = screen.getByPlaceholderText('E-mail');
-    userEvent.type(emailField, 'email@gmail.com');
-    expect(emailField).toHaveValue('email@gmail.com');
+    userEvent.type(emailField, email);
+    expect(emailField).toHaveValue(email);
 
     const passwordField = screen.getByPlaceholderText('Senha');
     userEvent.type(passwordField, '123123123');
@@ -24,32 +28,32 @@ describe('Testando as funcionalidades do Profile', () => {
     const bntProfile = screen.getByTestId('profile-top-btn');
     userEvent.click(bntProfile);
 
-    const testIdTitle = screen.getByTestId('page-title');
+    const testIdTitle = screen.getByTestId(pageTitle);
     expect(testIdTitle).toHaveTextContent('Profile');
 
-    const btnDoneRecepis = screen.getByTestId('profile-done-btn');
+    const btnDoneRecepis = screen.getByTestId(profileTop);
     expect(btnDoneRecepis).toBeInTheDocument();
 
     userEvent.click(btnDoneRecepis);
 
-    const testIdTitle2 = screen.getByTestId('page-title');
+    const testIdTitle2 = screen.getByTestId(pageTitle);
     expect(testIdTitle2).toHaveTextContent('Done Recipes');
 
-    const bntProfile2 = screen.getByTestId('profile-top-btn');
+    const bntProfile2 = screen.getByTestId(profileTop);
     userEvent.click(bntProfile2);
 
     const btnFavoriteRecepis = screen.getByTestId('profile-favorite-btn');
     userEvent.click(btnFavoriteRecepis);
 
-    const testIdTitle3 = screen.getByTestId('page-title');
+    const testIdTitle3 = screen.getByTestId(pageTitle);
     expect(testIdTitle3).toHaveTextContent('Favorite Recipes');
 
-    const bntProfile3 = screen.getByTestId('profile-top-btn');
+    const bntProfile3 = screen.getByTestId(profileTop);
     userEvent.click(bntProfile3);
 
-    const email = screen.getByTestId('profile-email');
-    expect(email).toBeInTheDocument();
-    expect(email).toHaveTextContent('email@gmail.com');
+    const emailProfile = screen.getByTestId('profile-email');
+    expect(emailProfile).toBeInTheDocument();
+    expect(emailProfile).toHaveTextContent(email);
 
     const bntLogout = screen.getByTestId('profile-logout-btn');
     userEvent.click(bntLogout);
