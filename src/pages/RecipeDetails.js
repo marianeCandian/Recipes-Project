@@ -18,19 +18,14 @@ export default function RecipeDetails() {
   const [verifyLocalStorage, setVerifyLocalStorage] = useState(true);
   const [copied, setCopied] = useState(true);
   const [favoriteBtn, setFavoriteBtn] = useState(true);
-
   const handleDispatch = () => {
     const { location: { pathname } } = history;
     const id = pathname.split('/');
     if (pathname.includes('/meals')) {
       dispatch(fetchRecipesMeals(id[2]));
-    } else if (pathname.includes('/drinks')) {
-      dispatch(fetchRecipesDrinks(id[2]));
-    }
+    } else if (pathname.includes('/drinks')) { dispatch(fetchRecipesDrinks(id[2])); }
   };
-
   const convertVideo = (url) => url.replace('watch?v=', 'embed/');
-
   const filterMeals = () => {
     const magicNumber = 50;
     const array = [];
@@ -44,7 +39,6 @@ export default function RecipeDetails() {
     }
     return array;
   };
-
   const filterDrinks = () => {
     const magicNumber = 50;
     const array = [];
@@ -58,7 +52,6 @@ export default function RecipeDetails() {
     }
     return array;
   };
-
   const fetchRecommendationMeals = async () => {
     const magicNumber = 6;
     const URL = 'https://www.themealdb.com/api/json/v1/1/search.php?s=';
@@ -68,7 +61,6 @@ export default function RecipeDetails() {
     setRecomendationMeals(recomendation);
     return data.meals;
   };
-
   const fetchRecommendationDrinks = async () => {
     const magicNumber = 6;
     const URL = 'https://www.thecocktaildb.com/api/json/v1/1/search.php?s=';
@@ -78,27 +70,19 @@ export default function RecipeDetails() {
     setRecomendationDrinks(recomendation);
     return data.drinks;
   };
-
   const handleRecipeInProgress = () => {
     const { location: { pathname } } = history;
     const id = pathname.split('/');
-    if (id.includes('meals')) {
-      history.push(`/meals/${id[2]}/in-progress`);
-    }
-    if (id.includes('drinks')) {
-      history.push(`/drinks/${id[2]}/in-progress`);
-    }
+    if (id.includes('meals')) { history.push(`/meals/${id[2]}/in-progress`); }
+    if (id.includes('drinks')) { history.push(`/drinks/${id[2]}/in-progress`); }
   };
-
   const verifyKeyLocalStorage = () => {
     const { location: { pathname } } = history;
     const id = pathname.split('/');
     const keyInProgressRecipes = localStorage.getItem('inProgressRecipes');
     if (keyInProgressRecipes === null) {
       setVerifyLocalStorage(true);
-    } else if (keyInProgressRecipes.includes(id[2])) {
-      setVerifyLocalStorage(false);
-    }
+    } else if (keyInProgressRecipes.includes(id[2])) { setVerifyLocalStorage(false); }
   };
 
   const buttonFavorite = () => {
@@ -111,7 +95,17 @@ export default function RecipeDetails() {
         alcoholicOrNot: '',
         name: e.strMeal,
         image: e.strMealThumb }));
-      localStorage.setItem('favoriteRecipes', JSON.stringify(saveLocalStorage));
+      if (favoriteBtn) {
+        const storage = JSON.parse(localStorage.getItem('favoriteRecipes'));
+        const salve = [...storage, saveLocalStorage[0]];
+        localStorage.setItem('favoriteRecipes', JSON.stringify(salve));
+        setFavoriteBtn(false);
+      } else {
+        const storage = JSON.parse(localStorage.getItem('favoriteRecipes'));
+        const remove = storage.filter((e) => e.id !== saveLocalStorage[0].id);
+        localStorage.setItem('favoriteRecipes', JSON.stringify(remove));
+        setFavoriteBtn(true);
+      }
     } else if (pathname.includes('drinks')) {
       const saveLocalStorage = drinks.map((e) => ({ id: e.idDrink,
         type: 'drink',
@@ -120,21 +114,28 @@ export default function RecipeDetails() {
         alcoholicOrNot: e.strAlcoholic,
         name: e.strDrink,
         image: e.strDrinkThumb }));
-      localStorage.setItem('favoriteRecipes', JSON.stringify(saveLocalStorage));
-    }
-    if (favoriteBtn) {
-      setFavoriteBtn(false);
-      localStorage.setItem('favorito', JSON.stringify(true));
-    } else {
-      setFavoriteBtn(true);
-      localStorage.setItem('favorito', JSON.stringify(false));
+      if (favoriteBtn) {
+        const storage = JSON.parse(localStorage.getItem('favoriteRecipes'));
+        const salve = [...storage, saveLocalStorage[0]];
+        localStorage.setItem('favoriteRecipes', JSON.stringify(salve));
+        setFavoriteBtn(false);
+      } else {
+        const storage = JSON.parse(localStorage.getItem('favoriteRecipes'));
+        const remove = storage.filter((e) => e.id !== saveLocalStorage[0].id);
+        localStorage.setItem('favoriteRecipes', JSON.stringify(remove));
+        setFavoriteBtn(true);
+      }
     }
   };
 
   useEffect(() => {
-    const boolean = localStorage.getItem('favorito');
-    if (boolean === 'true') { setFavoriteBtn(false); } else if (boolean === 'false') {
-      setFavoriteBtn(true);
+    const storage = localStorage.getItem('favoriteRecipes');
+    const { location: { pathname } } = history;
+    if (!storage) {
+      localStorage.setItem('favoriteRecipes', JSON.stringify([]));
+    } else if (storage !== null && storage !== undefined && storage.length > 0) {
+      const local = JSON.parse(localStorage.getItem('favoriteRecipes'));
+      setFavoriteBtn(local.some((e) => e.id.includes(pathname)));
     }
     handleDispatch(); fetchRecommendationMeals(); fetchRecommendationDrinks();
     verifyKeyLocalStorage();
