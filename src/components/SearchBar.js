@@ -92,7 +92,7 @@ export default function SearchBar({ search }) {
         Buscar
       </button>
       { meals
-        && meals.map((e, i) => (i <= magicNumber
+        && meals.map((e, i) => (i < magicNumber
           ? (
             <div key={ i } data-testid={ `${i}-recipe-card` }>
               <img

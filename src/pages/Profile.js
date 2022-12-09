@@ -9,7 +9,7 @@ function Profile() {
 
   const getEmail = () => {
     const local = JSON.parse(localStorage.getItem('user'));
-    setEmail(local.email);
+    setEmail(local?.email);
   };
 
   const handleClick = () => {

@@ -6,7 +6,21 @@ import renderWithRouterAndRedux from './helpers/renderWithRouterAndRedux';
 
 describe('Testando as funcionalidades do Footer', () => {
   it('Verifica se a pagina profile renderiza drinks e meals', () => {
-    renderWithRouterAndRedux(<App />, '', '/profile');
+    renderWithRouterAndRedux(<App />);
+
+    const emailField = screen.getByPlaceholderText('E-mail');
+    userEvent.type(emailField, 'teste@trybe.com');
+    expect(emailField).toHaveValue('teste@trybe.com');
+
+    const passwordField = screen.getByPlaceholderText('Senha');
+    userEvent.type(passwordField, '123123123');
+    expect(passwordField).toHaveValue('123123123');
+
+    const btn = screen.getByRole('button');
+    expect(btn).toBeEnabled();
+
+    userEvent.click(btn);
+
     const drinkIcon = screen.getByTestId('drinks-bottom-btn');
     expect(drinkIcon).toBeInTheDocument();
 
