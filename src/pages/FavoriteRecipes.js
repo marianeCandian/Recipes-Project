@@ -4,6 +4,7 @@ import copy from 'clipboard-copy';
 import Header from '../components/Header';
 import blackHeartIcon from '../images/blackHeartIcon.svg';
 import shareIcon from '../images/shareIcon.svg';
+import '../RecipeDetails.css';
 
 function FavoriteRecipes() {
   const [copied, setCopied] = useState(true);
@@ -74,6 +75,7 @@ function FavoriteRecipes() {
                   data-testid={ `${i}-horizontal-image` }
                   src={ e.image }
                   alt={ e.name }
+                  className="imgRecipes"
                 />
                 <h3 data-testid={ `${i}-horizontal-name` }>{ e.name }</h3>
               </Link>
@@ -105,6 +107,7 @@ function FavoriteRecipes() {
                   data-testid={ `${i}-horizontal-image` }
                   src={ e.image }
                   alt={ e.name }
+                  className="imgRecipes"
                 />
                 <h3 data-testid={ `${i}-horizontal-name` }>{ e.name }</h3>
               </Link>
