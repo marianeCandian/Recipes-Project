@@ -9,7 +9,6 @@ export default function SearchBar({ search }) {
   const [filter, setFilter] = useState('');
   const dispatch = useDispatch();
   const history = useHistory();
-  const magicNumber = 12;
 
   const meals = useSelector((state) => state.SearchReducer.search.meals);
   const drinks = useSelector((state) => state.SearchReducer.search.drinks);
@@ -91,32 +90,6 @@ export default function SearchBar({ search }) {
       >
         Buscar
       </button>
-      { meals
-        && meals.map((e, i) => (i < magicNumber
-          ? (
-            <div key={ i } data-testid={ `${i}-recipe-card` }>
-              <img
-                src={ e.strMealThumb }
-                data-testid={ `${i}-card-img` }
-                alt={ e.strMeal }
-              />
-              <h3 data-testid={ `${i}-card-name` }>{ e.strMeal }</h3>
-            </div>)
-          : null
-        ))}
-      { drinks
-        && drinks.map((e, i) => (i < magicNumber
-          ? (
-            <div key={ i } data-testid={ `${i}-recipe-card` }>
-              <img
-                src={ e.strDrinkThumb }
-                data-testid={ `${i}-card-img` }
-                alt={ e.strDrink }
-              />
-              <h3 data-testid={ `${i}-card-name` }>{ e.strDrink }</h3>
-            </div>)
-          : null
-        ))}
     </>
   );
 }

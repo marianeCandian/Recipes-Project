@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useHistory, Link } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import '../RecipeDetails.css';
 
 export default function Recipes() {
   const [mealsRecipes, setMealsRecipes] = useState('');
@@ -8,6 +10,9 @@ export default function Recipes() {
   const [drinksCategories, setDrinksCategories] = useState();
   const [selectedCategory, setSelectedCategory] = useState('');
   const history = useHistory();
+
+  const meals = useSelector((state) => state.SearchReducer.search.meals);
+  const drinks = useSelector((state) => state.SearchReducer.search.drinks);
 
   const fetchCategories = async () => {
     const { location: { pathname } } = history;
@@ -33,9 +38,7 @@ export default function Recipes() {
   };
 
   const fetchRecipes = async () => {
-    const {
-      location: { pathname },
-    } = history;
+    const { location: { pathname } } = history;
     try {
       if (pathname === '/meals') {
         const mealUrl = 'https://www.themealdb.com/api/json/v1/1/search.php?s=';
@@ -58,9 +61,7 @@ export default function Recipes() {
   };
 
   const fetchBySelectedMealCategory = async ({ target: { value } }) => {
-    const {
-      location: { pathname },
-    } = history;
+    const { location: { pathname } } = history;
     setSelectedCategory(value);
     if (selectedCategory === value) {
       fetchRecipes();
@@ -75,9 +76,7 @@ export default function Recipes() {
   };
 
   const fetchBySelectedDrinkCategory = async ({ target: { value } }) => {
-    const {
-      location: { pathname },
-    } = history;
+    const { location: { pathname } } = history;
     setSelectedCategory(value);
     if (selectedCategory === value) {
       fetchRecipes();
@@ -92,11 +91,31 @@ export default function Recipes() {
     }
   };
 
+  const searchedMealItem = () => {
+    const maxIndex = 12;
+    if (meals) {
+      const result = meals.slice(0, maxIndex);
+      setMealsRecipes(result);
+    }
+  };
+  const searchedDrinkItem = () => {
+    const maxIndex = 12;
+    if (drinks) {
+      const result = drinks.slice(0, maxIndex);
+      setDrinksRecipes(result);
+    }
+  };
+
   useEffect(() => {
     fetchCategories();
     fetchRecipes();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    searchedMealItem();
+    searchedDrinkItem();
+  }, [meals, drinks]);
+
   return (
     <>
       {mealsCategories ? (
@@ -145,6 +164,7 @@ export default function Recipes() {
                 src={ recipe.strMealThumb }
                 alt={ `${recipe.strMeal} thumb` }
                 data-testid={ `${index}-card-img` }
+                className="imgRecipes"
               />
               <p data-testid={ `${index}-card-name` }>{recipe.strMeal}</p>
             </Link>
@@ -161,6 +181,7 @@ export default function Recipes() {
                 src={ recipe.strDrinkThumb }
                 alt={ `${recipe.strDrink} thumb` }
                 data-testid={ `${index}-card-img` }
+                className="imgRecipes"
               />
               <p data-testid={ `${index}-card-name` }>{recipe.strDrink}</p>
             </Link>
