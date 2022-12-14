@@ -148,7 +148,7 @@ function RecipeInProgress() {
     }
     const arrayStorage = JSON.parse(localStorage.getItem('inProgressRecipes'));
     if (arrayStorage !== null) {
-      check.push(arrayStorage);
+      arrayStorage.forEach((element) => check.push(element));
     }
     handleDispatch();
   }, []);
@@ -182,12 +182,14 @@ function RecipeInProgress() {
           <fieldset>
             <ul className="ingredient" data-testid="ingredient-step">
               { filterDrinks().map((el, index) => (
-                <li key={ `ingredient${index}` }>
+                <li
+                  data-testid={ `${index}-ingredient-step` }
+                  key={ `ingredient${index}` }
+                >
                   <label className="ingredient" htmlFor={ `ingredient-${index}` }>
                     <input
                       name="Drinks"
                       id={ index }
-                      data-testid={ `${index}-ingredient-step` }
                       type="checkbox"
                       checked={ verifyCheck(index) }
                       onChange={ handleChange }
@@ -215,16 +217,18 @@ function RecipeInProgress() {
           <fieldset>
             <ul data-testid="ingredient-step" className="ingredient">
               {filterMeals().map((element, index) => (
-                <li key={ `ingredient${index}` }>
+                <li
+                  data-testid={ `${index}-ingredient-step` }
+                  key={ `ingredient${index}` }
+                >
                   <label
                     htmlFor={ `ingredient-${index}` }
                   >
                     <input
                       name="Meals"
-                      data-testid={ `${index}-ingredient-step` }
                       type="checkbox"
                       id={ index }
-                      checked={ check.find((ele) => ele === index) === index }
+                      checked={ verifyCheck(index) }
                       onChange={ handleChange }
                     />
                     <span>{ element }</span>
