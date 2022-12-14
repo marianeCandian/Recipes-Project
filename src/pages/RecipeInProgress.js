@@ -13,14 +13,22 @@ function RecipeInProgress() {
   const [check] = useState([]);
   const [length, setLength] = useState(0);
   const [favoriteBtn, setFavoriteBtn] = useState(true);
-
   const [finishBtn, setFinishBtn] = useState(true);
   const dispatch = useDispatch();
   const [copied, setCopied] = useState(true);
   const meals = useSelector((state) => state.DetailsReducer.details.meals);
   const drinks = useSelector((state) => state.DetailsReducer.details.drinks);
   const { location: { pathname } } = history;
-
+  const handleClick = () => {
+    const route = pathname.split('/');
+    if (route[1] === 'meals') {
+      localStorage.setItem('doneRecipes', JSON.stringify(meals));
+      history.push('/done-recipes');
+    } else {
+      localStorage.setItem('doneRecipes', JSON.stringify(drinks));
+      history.push('/done-recipes');
+    }
+  };
   const handleDispatch = () => {
     const id = pathname.split('/');
     if (pathname.includes('/meals')) {
@@ -40,7 +48,6 @@ function RecipeInProgress() {
     }
     return array;
   };
-
   const filterDrinks = () => {
     const magicNumber = 50;
     const array = [];
@@ -54,7 +61,6 @@ function RecipeInProgress() {
     }
     return array;
   };
-
   const handleChange = ({ target }) => {
     const { id, name } = target;
     if (check.find((e) => e === id) !== undefined) {
@@ -74,7 +80,6 @@ function RecipeInProgress() {
     }
     return localStorage.setItem('inProgressRecipes', JSON.stringify(check));
   };
-
   const buttonFavorite = () => {
     if (pathname.includes('meals')) {
       const saveLocalStorage = meals.map((e) => ({ id: e.idMeal,
@@ -116,11 +121,7 @@ function RecipeInProgress() {
       }
     }
   };
-
-  const verifyCheck = (index) => check.some(
-    (element) => element === JSON.stringify(index),
-  );
-
+  const verifyCheck = (index) => check.some((elmt) => elmt === JSON.stringify(index));
   const buttonShareIcon = () => {
     if (copied) {
       setCopied(false);
@@ -129,15 +130,6 @@ function RecipeInProgress() {
     console.log(route);
     copy(`http://localhost:3000/${route[1]}/${route[2]}`);
   };
-
-  // const verifyKeyLocalStorage = () => {
-  //   const id = pathname.split('/');
-  //   const keyInProgressRecipes = localStorage.getItem('inProgressRecipes');
-  //   if (keyInProgressRecipes === null) {
-  //     setVerifyLocalStorage(true);
-  //   } else if (keyInProgressRecipes.includes(id[2])) { setVerifyLocalStorage(false); }
-  // };
-
   useEffect(() => {
     const storage = localStorage.getItem('favoriteRecipes');
     if (!storage) {
@@ -246,6 +238,7 @@ function RecipeInProgress() {
         data-testid="finish-recipe-btn"
         className="buttonFooter"
         disabled={ finishBtn }
+        onClick={ handleClick }
       >
         Finish Recipe
       </button>
