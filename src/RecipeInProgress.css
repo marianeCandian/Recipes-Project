@@ -1,0 +1,3 @@
+.ingredient input:checked ~ span {
+  text-decoration: line-through solid black;
+}
