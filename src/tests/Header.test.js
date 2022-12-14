@@ -30,7 +30,7 @@ describe('Testando as funcionalidades do Header', () => {
     expect(searchIcon).toBeInTheDocument();
 
     const getButtons = screen.getAllByRole('button');
-    expect(getButtons).toHaveLength(5);
+    expect(getButtons).toHaveLength(6);
 
     const title = screen.getByTestId(testIdTitle);
     expect(title).toHaveTextContent('Meals');
@@ -47,7 +47,7 @@ describe('Testando as funcionalidades do Header', () => {
     const title2 = screen.getByTestId(testIdTitle);
     expect(title2).toHaveTextContent('Profile');
     const getButton = screen.getAllByRole('button');
-    expect(getButton).toHaveLength(3);
+    expect(getButton).toHaveLength(6);
   });
 
   it('Verifica a page loguin se não contem o header', () => {

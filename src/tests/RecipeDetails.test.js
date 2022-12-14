@@ -20,7 +20,7 @@ describe('Testando as funcionalidades da pagina Detalhes de Receitas', () => {
     const buttonFavorite = screen.getByTestId('favorite-btn');
     expect(buttonFavorite).toBeInTheDocument();
 
-    expect(buttonFavorite.src).toBe('http://localhost/whiteHeartIcon.svg');
+    expect(buttonFavorite.src).toBe('http://localhost/blackHeartIcon.svg');
 
     // userEvent.click(buttonFavorite);
 
