@@ -5,7 +5,7 @@ function DoneRecipes() {
   return (
     <>
       <Header pageName="Done Recipes" />
-      <p>Done Recipes</p>
+      <p> </p>
     </>
   );
 }
