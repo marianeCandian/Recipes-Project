@@ -1,30 +1,51 @@
 import React from 'react';
 import { screen } from '@testing-library/react';
-// import userEvent from '@testing-library/user-event';
+import userEvent from '@testing-library/user-event';
 import App from '../App';
 import renderWithRouterAndRedux from './helpers/renderWithRouterAndRedux';
+import mockMeal from './detailsMealMock';
+import mockDrink from './detailsDrinkMock';
 
 describe('Testando as funcionalidades da pagina Detalhes de Receitas', () => {
-  it('Verifica se a pagina detalhes renderiza meals corretamente', () => {
-    renderWithRouterAndRedux(<App />, '', '/meals/52771');
-    const buttonCopy = screen.getByTestId('share-btn');
-    expect(buttonCopy).toBeInTheDocument();
+  it('Testando se favorita corretamente uma comida', async () => {
+    const { history } = renderWithRouterAndRedux(<App />, { DetailsReducer: mockMeal }, '/meals/52795');
+    const meal = await screen.findByTestId('recipe-title');
+    expect(meal).toHaveTextContent('Chicken Handi');
 
-    // userEvent.click(buttonCopy);
-    // const text = screen.getByText(/Link copied!/i);
-    // expect(text).toBeInTheDocument();
+    const storage = JSON.parse(localStorage.getItem('favoriteRecipes'));
+    expect(storage).toHaveLength(0);
+
+    const favorite = screen.getByTestId('favorite-btn');
+    expect(favorite.src).toBe('http://localhost/whiteHeartIcon.svg');
+
+    userEvent.click(favorite);
+
+    expect(favorite.src).toBe('http://localhost/blackHeartIcon.svg');
+
+    const storage1 = JSON.parse(localStorage.getItem('favoriteRecipes'));
+    expect(storage1).toHaveLength(1);
+
+    const { pathname } = history.location;
+    expect(pathname).toBe('/meals/52795');
   });
 
-  it('Verifica se o botão de favorito tem todas funcionalidades', () => {
-    renderWithRouterAndRedux(<App />, '', '/meals/52771');
-    const buttonFavorite = screen.getByTestId('favorite-btn');
-    expect(buttonFavorite).toBeInTheDocument();
+  it('Testando se favorita corretamente uma bebida', async () => {
+    const { history } = renderWithRouterAndRedux(<App />, { DetailsReducer: mockDrink }, '/drinks/178319');
+    const meal = await screen.findByTestId('recipe-title');
+    expect(meal).toHaveTextContent('Aquamarine');
 
-    expect(buttonFavorite.src).toBe('http://localhost/whiteHeartIcon.svg');
+    const favorite = screen.getByTestId('favorite-btn');
+    userEvent.click(favorite);
+    expect(favorite.src).toBe('http://localhost/whiteHeartIcon.svg');
 
-    // userEvent.click(buttonFavorite);
+    userEvent.click(favorite);
 
-    // const img = screen.findAllByRole('img');
-    // expect(img[1].src).toBe('http://localhost/blackHeartIcon.svg');
+    expect(favorite.src).toBe('http://localhost/blackHeartIcon.svg');
+
+    const storage = JSON.parse(localStorage.getItem('favoriteRecipes'));
+    expect(storage).toHaveLength(2);
+
+    const { pathname } = history.location;
+    expect(pathname).toBe('/drinks/178319');
   });
 });

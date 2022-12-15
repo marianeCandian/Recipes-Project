@@ -52,7 +52,7 @@ function FavoriteRecipes() {
     if (favoriteBtn) {
       buttonDisfavor();
     }
-  }, [favorites]);
+  }, [favoriteBtn]);
 
   return (
     <>
